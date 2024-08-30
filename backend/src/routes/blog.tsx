@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { verify } from "hono/jwt";
-import { createBlog, updateBlog } from "../../../common/src/index";
+import { createBlog, updateBlog } from "@pavithran_codes/medium-validation";
 
 const blogRouter = new Hono<{
   Bindings: {

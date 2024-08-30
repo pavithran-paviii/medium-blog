@@ -5,6 +5,7 @@
     "deploy": "wrangler deploy --minify src/index.ts"
   },
   "dependencies": {
+    "@pavithran_codes/medium-validation": "^1.0.0",
     "@prisma/client": "^5.19.0",
     "@prisma/extension-accelerate": "^1.1.0",
     "bcrypt": "^5.1.1",

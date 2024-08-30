@@ -3,7 +3,7 @@ import { sign } from "hono/jwt";
 import { PrismaClient, User } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { hashPassword } from "../assets/functions";
-import { signUp, signIn } from "../../../common/src/index";
+import { signUp, signIn } from "@pavithran_codes/medium-validation";
 
 export const userRouter = new Hono<{
   Bindings: {
