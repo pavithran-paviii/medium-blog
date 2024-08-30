@@ -3,6 +3,7 @@ import { sign } from "hono/jwt";
 import { PrismaClient, User } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { hashPassword } from "../assets/functions";
+import { signUp, signIn } from "../../../common/src/index";
 
 export const userRouter = new Hono<{
   Bindings: {
@@ -18,6 +19,16 @@ userRouter.post("/signup", async (c) => {
 
   let body: { email: string; password: string; name: string } =
     await c.req.json();
+
+  const { success } = signUp.safeParse(body);
+
+  if (!success) {
+    c.status(411);
+    return c.json({
+      status: false,
+      message: "User inputs are not correct!",
+    });
+  }
 
   let hashedPassword = await hashPassword(body.password);
   try {
@@ -63,6 +74,16 @@ userRouter.post("/signin", async (c) => {
   try {
     let body: { email: string; password: string; name: string } =
       await c.req.json();
+
+    const { success } = signIn.safeParse(body);
+
+    if (!success) {
+      c.status(411);
+      return c.json({
+        status: false,
+        message: "User inputs are not correct!",
+      });
+    }
 
     let hashedPassword = await hashPassword(body.password);
 
