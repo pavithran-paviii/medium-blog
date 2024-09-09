@@ -147,7 +147,11 @@ blogRouter.get("/bulk", async (c) => {
   }).$extends(withAccelerate());
 
   try {
-    const allBlogs = await prisma.post.findMany();
+    const allBlogs = await prisma.post.findMany({
+      include: {
+        author: true, // This includes the related User (author) in the results
+      },
+    });
 
     if (allBlogs?.length > 0) {
       c.status(200);

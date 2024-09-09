@@ -1,10 +1,11 @@
-import { useEffect } from "react";
-import Navbar from "../components/Navbar";
-import EachPost from "../components/EachPost";
+import { useEffect, useState } from "react";
+import Navbar from "../../components/Navbar";
+import EachPost from "../../components/EachPost";
 import axios from "axios";
+import { BlogStructure } from "./home.types";
 
 const Home = () => {
-  // const [allBlogs, setAllBlogs] = useState([]);
+  const [allBlogs, setAllBlogs] = useState([]);
 
   //functions
   async function getAllBlogs() {
@@ -12,6 +13,9 @@ const Home = () => {
       let response = await axios.get(
         `https://backend.pavithranr65.workers.dev/api/v1/blog/bulk`
       );
+      if (response?.data?.data?.length > 0 && response.data?.status) {
+        setAllBlogs(response?.data?.data);
+      }
       console.log(response, "response feom all the blohs");
     } catch (error) {
       console.log(error, "Get all blogs error");
@@ -28,7 +32,10 @@ const Home = () => {
     <div>
       <Navbar />
       <div className="flex flex-col gap-4 max-w-screen-xl m-auto border-b pb-16">
-        <EachPost />
+        {allBlogs?.length > 0 &&
+          allBlogs?.map((eachBlog: BlogStructure) => {
+            return <EachPost key={eachBlog?.id} {...eachBlog} />;
+          })}
       </div>
     </div>
   );

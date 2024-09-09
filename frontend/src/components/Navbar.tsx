@@ -10,23 +10,23 @@ const Navbar = () => {
   const [scrollingUp, setScrollingUp] = useState(true);
   const [lastScrollTop, setLastScrollTop] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollTop = window.pageYOffset;
-      if (currentScrollTop > lastScrollTop) {
-        // Scrolling down
-        setScrollingUp(false);
-      } else {
-        // Scrolling up
-        setScrollingUp(true);
-      }
-      setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop);
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const currentScrollTop = window.pageYOffset;
+  //     if (currentScrollTop > lastScrollTop) {
+  //       // Scrolling down
+  //       setScrollingUp(false);
+  //     } else {
+  //       // Scrolling up
+  //       setScrollingUp(true);
+  //     }
+  //     setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop);
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
+  //   window.addEventListener("scroll", handleScroll);
 
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollTop]);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, [lastScrollTop]);
 
   return (
     <>
