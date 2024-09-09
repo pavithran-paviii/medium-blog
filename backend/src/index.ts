@@ -13,7 +13,7 @@ app.route("/api/v1/blog", blogRouter);
 app.route("/api/v1/", userRouter);
 
 app.get("/", (c) => {
-  return c.text("Hello Hono!");
+  return c.text("Welcome to medium blog!");
 });
 
 export default app;

@@ -16,6 +16,12 @@ const blogRouter = new Hono<{
 
 blogRouter.use("/*", async (c, next) => {
   const token = c.req.header("authorization")?.split(" ")[1] || "";
+
+  if (c.req.path === "/api/v1/blog/bulk") {
+    await next();
+    return;
+  }
+
   try {
     const user = (await verify(token, c.env.JWT_SECRET)) as { id: string };
     if (user) {
