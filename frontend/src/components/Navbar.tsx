@@ -92,7 +92,7 @@ const BottomNavbar = ({ isScroll }: { isScroll: boolean }) => {
 
   return (
     <div
-      className={`bottom-navbar	flex w-full sticky pb-4 ease-in duration-300 ${
+      className={`flex w-full sticky pb-4 ease-in duration-300 ${
         isScroll ? "top-16 pt-10" : "top-0 pt-5"
       }`}
     >
