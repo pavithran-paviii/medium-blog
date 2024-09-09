@@ -2,14 +2,26 @@ import { SignIn } from "@pavithran_codes/medium-validation";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import CustomInput from "./CustomInputs";
+import axios from "axios";
 
 const SignInContainer = () => {
-  const [signUp, setSignUp] = useState<SignIn>({
+  const [signIn, setSignIn] = useState<SignIn>({
     email: "",
     password: "",
   });
 
-  console.log(signUp, "signUp");
+  //functions
+  async function signUpUser() {
+    try {
+      let response = await axios.post(
+        `https://backend.pavithranr65.workers.dev/api/v1/signup`,
+        signIn
+      );
+      console.log(response, "response create new user");
+    } catch (error) {
+      console.log(error, "Create new user error");
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6 h-max items-center">
@@ -27,14 +39,14 @@ const SignInContainer = () => {
           title={"Email"}
           placeholder={"m@example.com"}
           name={"email"}
-          setState={setSignUp}
+          setState={setSignIn}
         />
         <CustomInput
           title={"Password"}
           placeholder={"Enter password..."}
           name={"password"}
           type={"password"}
-          setState={setSignUp}
+          setState={setSignIn}
         />
       </div>
       <button className="rounded-md bg-black text-white text-base font-semibold cursor-pointer px-2 py-2 w-full">
