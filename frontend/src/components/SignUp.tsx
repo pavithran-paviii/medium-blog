@@ -10,6 +10,8 @@ const SignUpContainer = () => {
     name: "",
   });
 
+  console.log(signUp, "signUp");
+
   return (
     <div className="flex flex-col gap-6 h-max items-center">
       <div className="text-center">

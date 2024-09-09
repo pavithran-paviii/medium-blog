@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Navbar from "../components/Navbar";
 import EachPost from "../components/EachPost";
 import axios from "axios";
 
 const Home = () => {
-  const [allBlogs, setAllBlogs] = useState([]);
+  // const [allBlogs, setAllBlogs] = useState([]);
 
   //functions
   async function getAllBlogs() {

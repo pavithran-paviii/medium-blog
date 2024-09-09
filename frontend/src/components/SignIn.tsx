@@ -3,11 +3,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import CustomInput from "./CustomInputs";
 
-const SignUpContainer = () => {
+const SignInContainer = () => {
   const [signUp, setSignUp] = useState<SignIn>({
     email: "",
     password: "",
   });
+
+  console.log(signUp, "signUp");
 
   return (
     <div className="flex flex-col gap-6 h-max items-center">
@@ -42,4 +44,4 @@ const SignUpContainer = () => {
   );
 };
 
-export default SignUpContainer;
+export default SignInContainer;
