@@ -39,7 +39,10 @@ const NewBlog = () => {
 
   return (
     <div>
-      <NewArticleNavbar createNewBlog={createNewBlog} />
+      <NewArticleNavbar
+        createNewBlog={createNewBlog}
+        localLoading={localLoading}
+      />
       <div className="max-w-screen-xl mx-auto flex flex-col justify-between w-full px-16 py-10">
         <input
           className="text-5xl border-l border-transparent outline-none pl-4 py-3 focus:border-gray-400"

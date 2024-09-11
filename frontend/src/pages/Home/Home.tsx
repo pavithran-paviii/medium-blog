@@ -38,7 +38,7 @@ const Home = () => {
       <Navbar />
       <div className="flex flex-col gap-4 max-w-screen-xl m-auto pb-16 ">
         {localLoading
-          ? Array.from({ length: 6 }).map((eachItem, index) => {
+          ? Array.from({ length: 6 }).map(() => {
               return <EachPostLoading />;
             })
           : allBlogs?.length > 0 &&

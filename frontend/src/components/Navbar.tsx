@@ -171,8 +171,10 @@ const BottomNavbar = () => {
 
 export const NewArticleNavbar = ({
   createNewBlog,
+  localLoading,
 }: {
   createNewBlog: () => void;
+  localLoading: boolean;
 }) => {
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState<Partial<UserStructure>>({});
@@ -224,6 +226,7 @@ export const NewArticleNavbar = ({
               <button
                 className="flex items-center gap-2 text-white cursor-pointer bg-green-700 py-1 px-4 rounded-full"
                 onClick={createNewBlog}
+                disabled={localLoading}
               >
                 <span>Publish</span>
               </button>
