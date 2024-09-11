@@ -16,11 +16,10 @@ const blogRouter = new Hono<{
 
 blogRouter.use("/*", async (c, next) => {
   const token = c.req.header("authorization")?.split(" ")[1] || "";
-  const id = c.req.param("id");
 
   if (
     c.req.path === "/api/v1/blog/bulk" ||
-    (c.req.path === "/api/v1/blog" && id)
+    c.req.path?.includes("/api/v1/blog/")
   ) {
     await next();
     return;
