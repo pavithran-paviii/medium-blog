@@ -1,26 +1,43 @@
 import { SignIn } from "@pavithran_codes/medium-validation";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CustomInput from "./CustomInputs";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const SignInContainer = () => {
+  const navigate = useNavigate();
+  const [localLoading, setLocalLoading] = useState(false);
   const [signIn, setSignIn] = useState<SignIn>({
     email: "",
     password: "",
   });
 
   //functions
-  async function signUpUser() {
+  async function signInUser() {
+    setLocalLoading(true);
     try {
       let response = await axios.post(
-        `https://backend.pavithranr65.workers.dev/api/v1/signup`,
+        `https://backend.pavithranr65.workers.dev/api/v1/signin`,
         signIn
       );
-      console.log(response, "response create new user");
+      setLocalLoading(false);
+      if (response?.data?.status) {
+        localStorage.setItem("medium-clone", response?.data?.token);
+        toast.success(response?.data?.message);
+        navigate("/");
+      } else {
+        toast.error(response?.data?.message);
+      }
     } catch (error) {
+      toast.error("Error while trying to create user!");
       console.log(error, "Create new user error");
+      setLocalLoading(false);
     }
+  }
+
+  if (localStorage.getItem("medium-clone")) {
+    navigate("/");
   }
 
   return (
@@ -49,8 +66,13 @@ const SignInContainer = () => {
           setState={setSignIn}
         />
       </div>
-      <button className="rounded-md bg-black text-white text-base font-semibold cursor-pointer px-2 py-2 w-full">
-        Login
+      <button
+        className={`rounded-md bg-black text-white text-base font-semibold cursor-pointer px-2 py-2 w-full ${
+          localLoading ? "opacity-50 pointer-events-none" : ""
+        }`}
+        onClick={signInUser}
+      >
+        {localLoading ? "Loading..." : "Login"}
       </button>
     </div>
   );
