@@ -1,9 +1,9 @@
 import { Hono } from "hono";
-import { sign } from "hono/jwt";
+import { sign, verify } from "hono/jwt";
 import { PrismaClient, User } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { hashPassword } from "../assets/functions";
-import { signUp, signIn } from "@pavithran_codes/medium-validation";
+import { signUp, signIn, SignUp } from "@pavithran_codes/medium-validation";
 
 export const userRouter = new Hono<{
   Bindings: {
@@ -118,3 +118,65 @@ userRouter.post("/signin", async (c) => {
     }
   }
 });
+
+userRouter.get(
+  "/me",
+  async (c, next) => {
+    const token = c.req.header("authorization")?.split(" ")[1] || "";
+
+    try {
+      const user = (await verify(token, c.env.JWT_SECRET)) as {
+        id: string;
+      };
+      if (user) {
+        c.set("userId", user.id);
+        await next();
+      } else {
+        c.status(403);
+        return c.json({
+          status: false,
+          message: "Authentication issue, please logout & try again!",
+        });
+      }
+    } catch (error) {
+      c.status(403);
+      return c.json({
+        status: false,
+        message: "Invalid token, please logout & try again!",
+      });
+    }
+  },
+  async (c) => {
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    try {
+      const userId = c.get("userId");
+      const user = await prisma.user.findFirst({
+        where: { id: userId },
+      });
+
+      if (user) {
+        c.status(200);
+        return c.json({
+          status: true,
+          data: { name: user?.name, id: user?.id, email: user?.email },
+          message: "User details fetched!",
+        });
+      } else {
+        c.status(404);
+        return c.json({
+          status: false,
+          message: "User doesn't exist!",
+        });
+      }
+    } catch (error) {
+      c.status(500);
+      return c.json({
+        status: false,
+        message: "Error while trying to get user details",
+      });
+    }
+  }
+);

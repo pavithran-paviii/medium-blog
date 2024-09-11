@@ -3,9 +3,11 @@ import Navbar from "../../components/Navbar";
 import EachPost, { EachPostLoading } from "../../components/EachPost";
 import axios from "axios";
 import { BlogStructure } from "./home.types";
+import { useGlobalContext } from "../../Context/GlobalContext";
 
 const Home = () => {
   const [allBlogs, setAllBlogs] = useState([]);
+  const { searchQuery } = useGlobalContext();
   const [localLoading, setLocalLoading] = useState(false);
 
   //functions
@@ -40,9 +42,15 @@ const Home = () => {
               return <EachPostLoading />;
             })
           : allBlogs?.length > 0 &&
-            allBlogs?.map((eachBlog: BlogStructure) => {
-              return <EachPost key={eachBlog?.id} {...eachBlog} />;
-            })}
+            allBlogs
+              ?.filter((eachBlog: BlogStructure) =>
+                eachBlog?.title
+                  ?.toLowerCase()
+                  ?.includes(searchQuery?.toLowerCase())
+              )
+              ?.map((eachBlog: BlogStructure) => {
+                return <EachPost key={eachBlog?.id} {...eachBlog} />;
+              })}
       </div>
     </div>
   );

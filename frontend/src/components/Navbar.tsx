@@ -1,35 +1,70 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 //assets
 import { GoPlus } from "react-icons/go";
 import { FaRegEdit } from "react-icons/fa";
-import { IoIosNotificationsOutline } from "react-icons/io";
 import fullLogo from "../assets/images/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { CgLogOut } from "react-icons/cg";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useGlobalContext } from "../Context/GlobalContext";
 
 const allTabs = ["For you", "Following", "Programming"];
 
-const Navbar = ({ onlyTop }: { onlyTop?: boolean }) => {
-  const [scrollingUp, setScrollingUp] = useState(true);
+interface UserStructure {
+  name?: string;
+  id: string;
+  email: string;
+}
 
+const Navbar = ({ onlyTop }: { onlyTop?: boolean }) => {
   return (
     <>
-      <TopNavbar isScroll={scrollingUp} />
-      {!onlyTop && <BottomNavbar isScroll={scrollingUp} />}
+      <TopNavbar />
+      {!onlyTop && <BottomNavbar />}
     </>
   );
 };
 
 export default Navbar;
 
-const TopNavbar = ({ isScroll }: { isScroll?: boolean }) => {
+const TopNavbar = () => {
   const navigate = useNavigate();
+  const { setSearchQuery } = useGlobalContext();
+  const [userDetails, setUserDetails] = useState<Partial<UserStructure>>({});
+
+  //functions
+  async function getUserDetails() {
+    try {
+      let response = await axios.get(
+        "https://backend.pavithranr65.workers.dev/api/v1/me",
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("medium-clone")}`,
+          },
+        }
+      );
+      if (response?.data.status) {
+        setUserDetails(response?.data?.data);
+      }
+    } catch (error) {
+      toast.error("Error while trying to get user details!");
+      console.log(error, "User details getching error");
+    }
+  }
+
+  //renderings
+
+  useEffect(() => {
+    if (localStorage.getItem("medium-clone")) {
+      getUserDetails();
+    }
+  }, []);
+
   return (
     <div
-      className={`top-navbar flex justify-between w-full px-6 h-16 py-4 border-b ease-in duration-300 bg-white ${
-        isScroll ? "sticky top-0" : "hidden"
-      }`}
+      className={`top-navbar flex justify-between w-full px-6 h-16 py-4 border-b ease-in duration-300 bg-white sticky top-0 z-10`}
     >
       <div className="flex items-center gap-6">
         <img
@@ -62,6 +97,7 @@ const TopNavbar = ({ isScroll }: { isScroll?: boolean }) => {
               type="text"
               id="search"
               placeholder="Search something.."
+              onChange={(event) => setSearchQuery(event?.target?.value)}
             />
           </div>
         </div>
@@ -76,8 +112,9 @@ const TopNavbar = ({ isScroll }: { isScroll?: boolean }) => {
               <FaRegEdit />
               <span>Write</span>
             </div>
-            <IoIosNotificationsOutline className="text-2xl opacity-50 cursor-pointer hover:opacity-100" />
-            <img src="" alt="" className="rounded-full h-8 w-8 border" />
+            <div className="font-semibold border rounded-full h-8 w-8 flex items-center justify-center">
+              {userDetails?.name?.charAt(0)?.toUpperCase()}
+            </div>
             <CgLogOut
               className="text-xl cursor-pointer"
               onClick={() => {
@@ -101,14 +138,12 @@ const TopNavbar = ({ isScroll }: { isScroll?: boolean }) => {
   );
 };
 
-const BottomNavbar = ({ isScroll }: { isScroll: boolean }) => {
+const BottomNavbar = () => {
   const [selectedTab, setSelectedTab] = useState("For you");
 
   return (
     <div
-      className={`flex w-full sticky pb-4 ease-in duration-300 bg-white ${
-        isScroll ? "top-16 pt-10" : "top-0 pt-5"
-      }`}
+      className={`flex w-full sticky pb-4 ease-in duration-300 bg-white pt-5 top-16`}
     >
       <div
         className={`flex gap-8 w-full max-w-screen-xl m-auto border-b items-center`}
@@ -134,8 +169,42 @@ const BottomNavbar = ({ isScroll }: { isScroll: boolean }) => {
   );
 };
 
-export const NewArticleNavbar = () => {
+export const NewArticleNavbar = ({
+  createNewBlog,
+}: {
+  createNewBlog: () => void;
+}) => {
   const navigate = useNavigate();
+  const [userDetails, setUserDetails] = useState<Partial<UserStructure>>({});
+
+  //functions
+  async function getUserDetails() {
+    try {
+      let response = await axios.get(
+        "https://backend.pavithranr65.workers.dev/api/v1/me",
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("medium-clone")}`,
+          },
+        }
+      );
+      if (response?.data.status) {
+        setUserDetails(response?.data?.data);
+      }
+    } catch (error) {
+      toast.error("Error while trying to get user details!");
+      console.log(error, "User details getching error");
+    }
+  }
+
+  //renderings
+
+  useEffect(() => {
+    if (localStorage.getItem("medium-clone")) {
+      getUserDetails();
+    }
+  }, []);
+
   return (
     <div
       className={`top-navbar flex justify-between w-full px-16 h-16 py-4 border-b bg-white`}
@@ -152,10 +221,15 @@ export const NewArticleNavbar = () => {
         <div className="flex items-center gap-6 text-base">
           {localStorage.getItem("medium-clone") ? (
             <>
-              <div className="flex items-center gap-2 text-white cursor-pointer bg-green-700 py-1 px-4 rounded-full">
+              <button
+                className="flex items-center gap-2 text-white cursor-pointer bg-green-700 py-1 px-4 rounded-full"
+                onClick={createNewBlog}
+              >
                 <span>Publish</span>
+              </button>
+              <div className="font-semibold border rounded-full h-8 w-8 flex items-center justify-center">
+                {userDetails?.name?.charAt(0)?.toUpperCase()}
               </div>
-              <img src="" alt="" className="rounded-full h-7 w-7 border" />
             </>
           ) : (
             <>

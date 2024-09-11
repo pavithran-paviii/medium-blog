@@ -8,10 +8,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Blog from "./pages/Blog";
 import NewBlog from "./pages/NewBlog";
+import { GlobalProvider } from "./Context/GlobalContext.tsx";
 
 function Router() {
   return (
-    <>
+    <GlobalProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -39,7 +40,7 @@ function Router() {
         pauseOnHover
         theme="light"
       />
-    </>
+    </GlobalProvider>
   );
 }
 

@@ -13,7 +13,7 @@ const EachPost = ({
 
   return (
     <div
-      className="flex flex-col gap-5 w-full border-b border-gray-200 pb-8 pt-3 cursor-pointer"
+      className="flex flex-col gap-5 w-full border-b border-gray-200 pb-8 pt-3 px-4 rounded cursor-pointer hover:bg-gray-100"
       onClick={() => navigate(`/${id}`)}
     >
       <div className="flex gap-2">
@@ -28,7 +28,9 @@ const EachPost = ({
       </div>
       <div>
         <div className="text-3xl font-bold">{title}</div>
-        <div className="mt-4 text-lg leading-7 text-gray-600">{content}</div>
+        <div className="mt-4 text-lg leading-7 text-gray-600">
+          {content ? extractAndTruncateText(content, 30) : ""}
+        </div>
       </div>
       <div className="text-gray-600 text-base">5 min read</div>
     </div>
@@ -62,4 +64,19 @@ export const EachPostLoading = () => {
       </div>
     </div>
   );
+};
+
+const extractAndTruncateText = (html: string, wordLimit: number): string => {
+  // Create a temporary DOM element to parse HTML
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+
+  // Extract text content
+  const textContent = tempDiv.textContent || "";
+
+  // Split text into words and truncate
+  const words = textContent.split(/\s+/); // Split by whitespace
+  const truncatedWords = words.slice(0, wordLimit).join(" ");
+
+  return truncatedWords;
 };

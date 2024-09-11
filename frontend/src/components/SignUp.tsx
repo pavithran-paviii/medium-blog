@@ -56,7 +56,7 @@ const SignUpContainer = () => {
         <CustomInput
           title={"Username"}
           placeholder={"Enter your username"}
-          name={"username"}
+          name={"name"}
           setState={setSignUp}
         />
         <CustomInput

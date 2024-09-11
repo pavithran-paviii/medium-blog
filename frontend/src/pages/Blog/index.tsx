@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import { BlogStructure } from "../Home/home.types";
 import moment from "moment";
+import DOMPurify from "dompurify";
 
 const Blog = () => {
   const { blogid } = useParams();
@@ -70,7 +71,15 @@ const Blog = () => {
                   "MMM Do YYYY"
                 )}`}
             </div>
-            <div className="mt-6 text-lg font-medium">{eachBlog?.content}</div>
+            {eachBlog?.content && (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(
+                    cleanContent(eachBlog?.content || "")
+                  ),
+                }}
+              />
+            )}
           </>
         )}
       </div>
@@ -79,3 +88,16 @@ const Blog = () => {
 };
 
 export default Blog;
+
+const cleanContent = (html: string) => {
+  // Create a temporary DOM element to parse the HTML
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+
+  // Remove elements with specific classes
+  const tooltips = tempDiv.querySelectorAll(".ql-tooltip");
+  tooltips.forEach((tooltip) => tooltip.remove());
+
+  // Return the cleaned HTML
+  return tempDiv.innerHTML;
+};
